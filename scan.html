@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>QR Attendance Scanner</title>
+  <script src="https://unpkg.com/html5-qrcode"></script>
+</head>
+<body>
+  <h2>Scan Student QR</h2>
+  <div id="reader" style="width:300px;"></div>
+  <script>
+    function onScanSuccess(qrCodeMessage) {
+        fetch("http://127.0.0.1:5000/mark_attendance", {
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify({student_id: qrCodeMessage})
+        })
+        .then(res => res.json())
+        .then(data => alert(data.message));
+    }
+    new Html5QrcodeScanner("reader", { fps: 10, qrbox: 250 })
+        .render(onScanSuccess);
+  </script>
+</body>
+</html>
